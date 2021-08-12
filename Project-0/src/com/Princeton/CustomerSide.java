@@ -3,6 +3,8 @@ package com.Princeton;
 import java.sql.SQLException;
 import java.util.Scanner;
 
+
+
 public class CustomerSide {
 	static UserDAO dao =  UserDAOFactory.getUserDao();
 	
