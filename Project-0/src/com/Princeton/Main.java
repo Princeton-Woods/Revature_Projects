@@ -7,11 +7,11 @@ import java.util.Scanner;
 
 public class Main {
 	public static List<User> users = new ArrayList<User>();
+
 	public static void main(String[] args) throws ClassNotFoundException, SQLException {
 
         UserDAO dao =  UserDAOFactory.getUserDao();
         
-		
 		//Variables
 		int menuSelection = 0;
 		Scanner scan = new Scanner(System.in);
@@ -23,10 +23,10 @@ public class Main {
 		final String Text_Red = "\u001B[31m";
 		final String Text_Green = "\u001B[32m";
 		final String Text_Yellow = "\u001B[33m";
-		final String Text_Purple = "\u001B[35m";
+		final String Text_Purple = "\033[0;95m";
 		final String Text_Cyan = "\u001B[36m";
 			
-		while(menuSelection != 6) {
+		while(menuSelection != 7) {
 			//Menu variables resets every loop until Quit
 			menuSelection = 0;
 			choice = null;
@@ -36,10 +36,11 @@ public class Main {
 			System.out.println(Text_Reset + Text_Yellow + "Please select an option: " + Text_Reset);
 			System.out.println(Text_Purple +"	1. Add User " + Text_Reset);  	
 			System.out.println(Text_Purple +"	2. Edit User" + Text_Reset);  
-			System.out.println(Text_Purple +"	3. Delete User" + Text_Reset); 
+			System.out.println(Text_Purple +"	3. Reject Account" + Text_Reset); 
 			System.out.println(Text_Purple +"	4. Get User"+ Text_Reset);	
 			System.out.println(Text_Purple +"	5. Get User By ID"+ Text_Reset);	
-			System.out.println(Text_Red +"	6. Quit" + Text_Reset);				   //Quit
+			System.out.println(Text_Purple +"	6. Get Logs"+ Text_Reset);
+			System.out.println(Text_Red +"	7. Quit" + Text_Reset);				   //Quit
 				
 			System.out.println(Text_Green + "What will you choose: " + Text_Reset);//Selection Text
 			
@@ -48,7 +49,7 @@ public class Main {
 				choice = scan.nextLine();
 				if(isNumeric(choice)) {
 					menuSelection = Integer.parseInt(choice);
-					if(menuSelection < 1 || menuSelection > 6) {
+					if(menuSelection < 1 || menuSelection > 7) {
 						System.out.println(Text_Red + "Invalid Selection Try again: " + Text_Reset);
 						menuSelection = 0;
 					} else {	validInput = true;	}
@@ -126,8 +127,10 @@ public class Main {
         		}
         		System.out.println();
         		break;
-        		
         	case 6:
+        		dao.GetHistory();
+        		System.out.println();
+        	case 7:
         		System.out.println(Text_Cyan + "You have quit. Goodbye!" + Text_Reset);
         		break;
 	        }

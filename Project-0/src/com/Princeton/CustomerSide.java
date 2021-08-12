@@ -8,11 +8,12 @@ import java.util.Scanner;
 public class CustomerSide {
 	static UserDAO dao =  UserDAOFactory.getUserDao();
 	
+	
 	final static String Reset = "\u001B[0m";
 	final static String Red = "\u001B[31m";
 	final static String Green = "\u001B[32m";
 	final static String Yellow = "\u001B[33m";
-	final static String Purple = "\u001B[35m";
+	final static String Purple = "\033[0;95m";
 	final static String Cyan = "\u001B[36m";
 	public static void main(String[] args) throws ClassNotFoundException, SQLException {
 
@@ -133,12 +134,13 @@ public class CustomerSide {
 	
 	public static void SecondMenu(User u, Scanner scan) throws SQLException {
 		int MenuSelection = 0;
-		while(MenuSelection != 4) {
+		while(MenuSelection != 5) {
 			System.out.println(Yellow+"Please Choose what you would like to do"+ Reset);
 			System.out.println(Purple +"1)  WithDraw"+ Reset);
 			System.out.println(Purple +"2)  Deposit"+ Reset);
 			System.out.println(Purple +"3)  Transfer"+ Reset);
-			System.out.println(Red +"4)  Log Out"+ Reset);
+			System.out.println(Purple +"4)  Transaction History"+ Reset);
+			System.out.println(Red +"5)  Log Out"+ Reset);
 			System.out.println(Green + "What will you choose: "+ Reset);
 			MenuSelection = (int) inputCertification(scan);
 			if(MenuSelection > 4 || MenuSelection < 1) {
@@ -189,6 +191,10 @@ public class CustomerSide {
 				}
 				break;
 			case 4:
+				dao.GetHistory();
+				System.out.println();
+				break;
+			case 5:
 				return;
 			}
 			MenuSelection = 0;

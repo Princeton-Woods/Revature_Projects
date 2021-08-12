@@ -7,7 +7,8 @@ import java.util.List;
 public class UserImpl implements UserDAO{
 	private static Statement statement = null;
     Connection connection = null;
-	
+	public static List<String> log = new ArrayList<String>();
+    
     public UserImpl()  {
         try {
             this.connection = ConnectionFactory.getConnection();
@@ -29,9 +30,11 @@ public class UserImpl implements UserDAO{
         if(count > 0) {
             System.out.println("User saved");
             Main.users.add(user.getId(), user);
+            log.add( "\u001B[32m" + "User added with parameters: " + user.getName() + " " +user.getEmail() + " " + user.getPword()+ " " + user.getBalance()+ " " +"\u001B[0m");
         }
         else {
-            System.out.println("Oops! something went wrong");
+            System.out.println("Error");
+            log.add("\u001B[31m" +"Unsuccessful User Creation"+"\u001B[0m");
         }
     }
 
@@ -48,9 +51,13 @@ public class UserImpl implements UserDAO{
         int count = preparedStatement.executeUpdate();
         if(count > 0) {
             System.out.println("User updated");
+            log.add( "\u001B[32m" + "User updated with parameters: Users name- " + user.getName() + " Users email- " +user.getEmail() + " Users password- " + user.getPword()+ " User balance- " + user.getBalance()+ " User ID- " + user.getId()+"\u001B[0m");
         }
-        else
+        else {
             System.out.println("Error ");
+            log.add("\u001B[31m" + "Unsuccessful User Update");
+        }
+        
     }
 
 	@Override
@@ -62,9 +69,12 @@ public class UserImpl implements UserDAO{
         if(count > 0) {
             System.out.println("User deleted");
         	Main.users.remove(id);
+        	log.add( "\u001B[32m" + "User with ID: " + id + " deleted" +"\u001B[0m");
 		}
-        else
+        else {
             System.out.println("Invalid id zero rows affected.");
+            log.add("\u001B[31m" + "Unsuccessful User Delete");
+        }
     }
 	public List<User> getUsers()  throws SQLException{
 		String sql = "select * from users";
@@ -111,6 +121,7 @@ public class UserImpl implements UserDAO{
 	public User ModifyBalance(User u,int modtype, double amount) throws SQLException {
 		if(modtype == 1) { //W
 			if((u.getBalance() - amount) < 0) {
+				log.add("\u001B[31m" + "Transaction Failed- Improper or insufficient balance. " + "\u001B[0m");
 				return null;
 			}
 			String sql = "update users set userBalance = ? where user_name = ? and userEmail = ?";
@@ -120,7 +131,7 @@ public class UserImpl implements UserDAO{
 			preparedStatement.setString(2, u.getName());
 			preparedStatement.setString(3, u.getEmail());
 	        preparedStatement.executeUpdate();
-			
+	        log.add("\u001B[32m" + "Transaction Successful- Widthdrawl of: " + amount + " from the User " + u.getName() + " at " + u.getEmail() + "\u001B[0m");
 	        return u;
 		}
 		if(modtype == 2) { //D
@@ -132,6 +143,7 @@ public class UserImpl implements UserDAO{
 			preparedStatement.setString(2, u.getName());
 			preparedStatement.setString(3, u.getEmail());
 			preparedStatement.executeUpdate();
+	        log.add("\u001B[32m" + "Transaction Successful- Deposit of: " + amount + " from the User " + u.getName() + " at " + u.getEmail() + "\u001B[0m");	        
 	        return u;
 		} //T
 		return null;
@@ -139,7 +151,9 @@ public class UserImpl implements UserDAO{
 	}
 	public User MakeTransfer(User u, String targetName, String targetEmail, double amount) throws SQLException {
 		if((u.getBalance() - amount) < 0 || targetName.isEmpty() || targetEmail.isEmpty() || targetName.isBlank() || targetEmail.isBlank()) {
+			log.add("\u001B[31m" + "Transfer Failed- Transfer of: " + amount + " Sent to: " + targetName + " at " + targetEmail + " Failed " + "\u001B[0m");
 			return null;
+			
 		}
 		String sql = "update users set userBalance = ? where user_name = ? and userEmail = ?";
 		u.setBalance(u.getBalance() - amount);
@@ -157,6 +171,7 @@ public class UserImpl implements UserDAO{
         int count = preparedStatement.executeUpdate();
         if(count > 0) {
             System.out.println("User balance updated");
+            log.add("\u001B[32m" + "Transfer Successful- Transfer of: " + amount + " Sent to: " + targetName + " at " + targetEmail + "\u001B[0m");
         }
         else {
             System.out.println("Error ");
@@ -164,6 +179,15 @@ public class UserImpl implements UserDAO{
 
 		return u;
 		
+	}
+	public void GetHistory() {
+		if(log.isEmpty()) {
+			System.out.println("No Transaction History for this session");
+		} else	{
+			for(String S: log) {
+				System.out.println(S);
+			}
+		}
 	}
 
 }

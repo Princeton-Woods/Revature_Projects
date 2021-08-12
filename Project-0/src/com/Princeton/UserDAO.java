@@ -11,4 +11,5 @@ public interface UserDAO {
     public User LogIn(String username, String password) throws SQLException;
     public User ModifyBalance(User u, int modtype, double amount) throws SQLException;
     public User MakeTransfer(User u, String targetName, String targetEmail, double amount) throws SQLException;
+	public void GetHistory();
 }
