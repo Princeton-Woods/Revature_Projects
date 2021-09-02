@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class UserImpl implements UserDAO{
-	private static Statement statement = null;
+	//private static Statement statement = null;
     Connection connection = null;
 	public static List<String> log = new ArrayList<String>();
     
